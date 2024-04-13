@@ -5,24 +5,42 @@ version: "3.7"
 networks:
   db-net:
     external: true
+  robotic-net:
+    external: true
 
 services:
   robotic-portal:
     build:
-      context: ../Robotic Service
+      context: ../robotic-service
     image: robotic-portal/robotic-server:latest
     container_name: robotic-service
     hostname: robotic-portal
     # these pem file is mainly being used for encryption purpose
     # you may tweak the volumes by changing the path for the pem file
     volumes:
-      - ../Robotic Service/encryption-public-key.pem/:/usr/app/encryption-public-key.pem
-      - ../Robotic Service/encryption-private-key.pem/:/usr/app/encryption-private-key.pem
+      - ../robotic-service/encryption-public-key.pem/:/usr/app/encryption-public-key.pem
+      - ../robotic-service/encryption-private-key.pem/:/usr/app/encryption-private-key.pem
     env_file:
-      - ../Robotic Service/.env
+      - ../robotic-service/.env
       - .env
     networks:
       - db-net
+      - robotic-net
     ports:
-      - "7000:8080"
+      - "8080:8080"
+    restart: on-failure
+
+  robotic-student-webapp:
+    build:
+      context: ../robotic-student-webapp
+    image: robotic-portal/robotic-student-webapp:latest
+    container_name: robotic-student-webapp
+    hostname: robotic-student-webapp
+    env_file:
+      - ../robotic-student-webapp/.env
+      - .env
+    networks:
+      - robotic-net
+    ports:
+      - "3000:8080"
     restart: on-failure
