@@ -9,7 +9,7 @@ networks:
     external: true
 
 services:
-  robotic-portal:
+  robotic-service:
     build:
       context: ../robotic-service
     image: robotic-portal/robotic-server:latest
@@ -28,19 +28,16 @@ services:
       - robotic-net
     ports:
       - "8080:8080"
-    restart: on-failure
 
   robotic-student-webapp:
     build:
       context: ../robotic-student-webapp
+      # args:
+      #   - DEPLOY_ENV=development
     image: robotic-portal/robotic-student-webapp:latest
     container_name: robotic-student-webapp
     hostname: robotic-student-webapp
-    env_file:
-      - ../robotic-student-webapp/.env
-      - .env
     networks:
       - robotic-net
     ports:
       - "3000:8080"
-    restart: on-failure
