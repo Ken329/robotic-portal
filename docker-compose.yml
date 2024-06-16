@@ -29,15 +29,28 @@ services:
     ports:
       - "8080:8080"
 
+  robotic-admin-webapp:
+    build:
+      context: ../robotic-admin-webapp
+      args:
+        - DEPLOY_ENV=development
+    image: robotic-portal/robotic-admin-webapp:latest
+    container_name: robotic-admin-webapp
+    hostname: robotic-admin-webapp
+    networks:
+      - robotic-net
+    ports:
+      - "3000:8080"
+
   robotic-student-webapp:
     build:
       context: ../robotic-student-webapp
-      # args:
-      #   - DEPLOY_ENV=development
+      args:
+        - DEPLOY_ENV=development
     image: robotic-portal/robotic-student-webapp:latest
     container_name: robotic-student-webapp
     hostname: robotic-student-webapp
     networks:
       - robotic-net
     ports:
-      - "3000:8080"
+      - "3004:8080"
